@@ -43,10 +43,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private void uploadData(MultipartFile multipartFile) throws Exception {
         employeeRepo.deleteAll();
-
         Reader streamReader = new InputStreamReader(multipartFile.getInputStream(), StandardCharsets.UTF_8);
         BufferedReader bufferedReader = new BufferedReader(streamReader);
         try {
+            bufferedReader.readLine();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] cells = line.split("\t");
@@ -54,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employees.setEmpId(Utils.getLongValue(cells, 0));
                 employees.setProjectId(Utils.getLongValue(cells, 1));
                 employees.setDateFrom(Utils.parseDate(cells[2]));
-                employees.setDateTo(cells.length < 4  ? new Date() : Utils.parseDate(cells[3]));
+                employees.setDateTo(cells.length < 4 ? new Date() : Utils.parseDate(cells[3]));
                 employeeRepo.save(employees);
             }
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private String getKey(EmployeeProjection x) {
-        List<String> list =new ArrayList<>();
+        List<String> list = new ArrayList<>();
         list.add(x.getEmpId1().toString());
         list.add(x.getEmpId2().toString());
         Collections.sort(list);
